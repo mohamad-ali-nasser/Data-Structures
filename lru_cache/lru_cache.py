@@ -1,3 +1,5 @@
+from doubly_linked_list import ListNode, DoublyLinkedList
+
 class LRUCache:
     """
     Our LRUCache class keeps track of the max number of nodes it
@@ -7,7 +9,8 @@ class LRUCache:
     to every node stored in the cache.
     """
     def __init__(self, limit=10):
-        pass
+        self.limit = limit
+        self.storage = DoublyLinkedList()
 
     """
     Retrieves the value associated with the given key. Also
@@ -17,7 +20,20 @@ class LRUCache:
     key-value pair doesn't exist in the cache.
     """
     def get(self, key):
-        pass
+        self.key = key
+        current_key = self.storage.head
+        value = None
+        # done = None
+        while current_key is not None:
+                print('nowhtev')
+                if self.key in current_key.value:
+                    print(current_key.value[self.key])
+                    value = current_key.value[self.key]
+                    self.storage.move_to_front(current_key)
+                    return value
+                    # done = 1
+                current_key = current_key.next
+        return value
 
     """
     Adds the given key-value pair to the cache. The newly-
@@ -30,4 +46,21 @@ class LRUCache:
     the newly-specified value.
     """
     def set(self, key, value):
-        pass
+        self.key = key
+        self.value = value
+        current_key = self.storage.head
+        done = None
+        if self.limit == 0:
+            self.storage.remove_from_tail()
+            self.storage.add_to_head({self.key: self.value})
+        else:
+            while current_key is not None:
+                if self.key in current_key.value:
+                    # current_key.value[self.key] = self.value
+                    self.storage.delete(current_key)
+                    self.storage.add_to_head({self.key: self.value})
+                    done = 1
+                current_key = current_key.next
+            if done is None:
+                self.storage.add_to_head({self.key: self.value})
+                self.limit -= 1
